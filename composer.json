@@ -1,0 +1,99 @@
+{
+    "type": "project",
+    "name": "sweetchuck/coverage-merger-cli",
+    "description": "CLI tool to merge two or more coverage report files into one.",
+    "keywords": [
+        "coverage"
+    ],
+    "authors": [
+        {
+            "name": "Andor",
+            "role": "Maintainer",
+            "homepage": "https://github.com/Sweetchuck"
+        }
+    ],
+    "homepage": "https://github.com/Sweetchuck/coverage-merger-cli",
+    "support": {
+        "source": "https://github.com/Sweetchuck/coverage-merger-cli",
+        "issues": "https://github.com/Sweetchuck/coverage-merger-cli/issues"
+    },
+    "license": "GPL-3.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "sweetchuck/composer-suite": true,
+            "sweetchuck/git-hooks": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "repositories": {},
+    "require": {
+        "php": ">=7.4 <8.0",
+        "ext-json": "*",
+        "psr/log": "^1.1",
+        "sweetchuck/coverage-merger": "1.x-dev",
+        "symfony/console": "^5.1",
+        "symfony/dependency-injection": "^5.3"
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-asserts": "^2.0",
+        "codeception/module-cli": "^2.0",
+        "consolidation/robo": "^3.0",
+        "mikey179/vfsstream": "^1.6",
+        "nuvoleweb/robo-config": "2.x-dev",
+        "phpmd/phpmd": "^2.11",
+        "squizlabs/php_codesniffer": "^3.6",
+        "sweetchuck/composer-suite": "1.x-dev",
+        "sweetchuck/git-hooks": "2.x-dev",
+        "sweetchuck/robo-composer": "2.x-dev",
+        "sweetchuck/robo-git": "2.x-dev",
+        "sweetchuck/robo-phpcs": "2.x-dev",
+        "sweetchuck/robo-phpmd": "2.x-dev",
+        "symfony/error-handler": "^5.3",
+        "symfony/finder": "^5.3",
+        "symfony/yaml": "^5.4"
+    },
+    "bin": [
+        "./bin/coverage-merger"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sweetchuck\\CoverageMergerCli\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sweetchuck\\CoverageMergerCli\\Tests\\Acceptance\\": "tests/acceptance/",
+            "Sweetchuck\\CoverageMergerCli\\Tests\\Unit\\": "tests/unit/",
+            "Sweetchuck\\CoverageMergerCli\\Tests\\": "tests/_support/"
+        }
+    },
+    "scripts": {},
+    "scripts-descriptions": {},
+    "extra": {
+        "composer-suite": {
+            "local": {
+                "actions": [
+                    {
+                        "type": "prepend",
+                        "config": {
+                            "parents": [
+                                "repositories"
+                            ],
+                            "items": {
+                                "sweetchuck/coverage-merger": {
+                                    "type": "path",
+                                    "url": "../../sweetchuck/coverage-merger-1.x"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

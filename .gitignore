@@ -1,0 +1,12 @@
+
+/artifacts/
+
+/tests/_data/fixtures/case-01/reports/
+/tests/_log/
+/tests/_support/_generated/
+
+/vendor/
+
+/.git-hooks.local
+/coverage-merger.phar
+/robo.yml
