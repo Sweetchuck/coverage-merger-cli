@@ -37,4 +37,11 @@ class UnitTester extends \Codeception\Actor
         $process = new Process($command, $dir);
         $process->run();
     }
+
+    public function grabPhpVersionMajorMinor(): string
+    {
+        $full = str_pad((string) \PHP_VERSION_ID, 6, '0', \STR_PAD_LEFT);
+
+        return substr($full, 0, 4);
+    }
 }

@@ -31,10 +31,10 @@
     },
     "repositories": {},
     "require": {
-        "php": ">=7.4 <8.0",
+        "php": ">=7.4",
         "ext-json": "*",
         "psr/log": "^1.1",
-        "sweetchuck/coverage-merger": "1.x-dev",
+        "sweetchuck/coverage-merger": "2.x-dev",
         "symfony/console": "^5.1",
         "symfony/dependency-injection": "^5.3"
     },
@@ -87,7 +87,7 @@
                             "items": {
                                 "sweetchuck/coverage-merger": {
                                     "type": "path",
-                                    "url": "../../sweetchuck/coverage-merger-1.x"
+                                    "url": "../../sweetchuck/coverage-merger-2.x"
                                 }
                             }
                         }

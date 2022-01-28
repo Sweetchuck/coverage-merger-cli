@@ -27,11 +27,14 @@ class MergeFilesCest
             ),
         );
 
+        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '.php';
+
         $I->assertSame(
             strtr(
-                file_get_contents("$fixturesDir/expected/merged.php"),
+                file_get_contents("$fixturesDir/expected/$expectedFileName"),
                 [
-                    '{{ baseDir }}' => getcwd(),
+                    '{{ baseDirStr }}' => getcwd(),
+                    '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
                 ],
             ),
             strtr(
@@ -62,11 +65,14 @@ class MergeFilesCest
             ),
         );
 
+        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '.php';
+
         $I->assertSame(
             strtr(
-                file_get_contents("$fixturesDir/expected/merged.php"),
+                file_get_contents("$fixturesDir/expected/$expectedFileName"),
                 [
-                    '{{ baseDir }}' => getcwd(),
+                    '{{ baseDirStr }}' => getcwd(),
+                    '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
                 ],
             ),
             strtr(

@@ -58,11 +58,14 @@ class MergeFilesTest extends Unit
         $this->tester->assertSame('', $commandTester->getDisplay(), 'stdOutput');
         $this->tester->assertSame('', $commandTester->getErrorOutput(), 'stdError');
 
+        $expectedFileName = 'merged-' . $this->tester->grabPhpVersionMajorMinor() . '.php';
+
         $this->tester->assertSame(
             strtr(
-                file_get_contents("$mergerFixturesDir/expected/merged.php"),
+                file_get_contents("$mergerFixturesDir/expected/$expectedFileName"),
                 [
-                    '{{ baseDir }}' => getcwd(),
+                    '{{ baseDirStr }}' => getcwd(),
+                    '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
                 ],
             ),
             strtr(
