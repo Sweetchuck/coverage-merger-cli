@@ -27,7 +27,10 @@ class MergeFilesCest
             ),
         );
 
-        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '.php';
+        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-acceptance.php';
+        if (!file_exists("$fixturesDir/expected/$expectedFileName")) {
+            $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-unit.php';
+        }
 
         $I->assertSame(
             strtr(
@@ -65,7 +68,10 @@ class MergeFilesCest
             ),
         );
 
-        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '.php';
+        $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-acceptance.php';
+        if (!file_exists("$fixturesDir/expected/$expectedFileName")) {
+            $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-unit.php';
+        }
 
         $I->assertSame(
             strtr(

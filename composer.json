@@ -35,8 +35,8 @@
         "ext-json": "*",
         "psr/log": "^1.1",
         "sweetchuck/coverage-merger": "2.x-dev",
-        "symfony/console": "^5.1",
-        "symfony/dependency-injection": "^5.3"
+        "symfony/console": "^5.1 || ^6.0",
+        "symfony/dependency-injection": "^5.3 || ^6.0"
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
@@ -53,9 +53,11 @@
         "sweetchuck/robo-git": "2.x-dev",
         "sweetchuck/robo-phpcs": "2.x-dev",
         "sweetchuck/robo-phpmd": "2.x-dev",
-        "symfony/error-handler": "^5.3",
-        "symfony/finder": "^5.3",
-        "symfony/yaml": "^5.4"
+        "sweetchuck/utils": "1.x-dev",
+        "symfony/error-handler": "^5.3 || ^6.0",
+        "symfony/filesystem": "^5.0 || ^6.0",
+        "symfony/finder": "^5.3 || ^6.0",
+        "symfony/yaml": "^5.4 || ^6.0"
     },
     "bin": [
         "./bin/coverage-merger"
