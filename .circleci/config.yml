@@ -22,7 +22,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'circleci/php:7.4'
+                image: 'cimg/php:7.4'
     php_plus1:
         environment:
             <<: *env_common
@@ -30,7 +30,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'circleci/php:8.0'
+                image: 'cimg/php:8.0'
     php_plus2:
         environment:
             <<: *env_common
@@ -49,15 +49,13 @@ commands:
                     name: 'Install PCOV PHP extension - pecl install pcov'
                     command: |
                         sudo pecl install pcov
-                        php -v
-                        php -m
                         if php -m | grep pcov ; then
                             exit 0
                         fi
 
                         scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
                         echo 'extension=pcov' | sudo tee "${scanDir}/pcov.ini"
-                        php -m
+                        php -m | grep pcov
 
     composer_install:
         description: 'Install Composer dependencies with cache restore and save'
@@ -198,37 +196,21 @@ commands:
 jobs:
     build:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'release_build'
     lint:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'lint'
-    test_php_min:
-        executor: 'php_min'
-        working_directory: '~/repo'
-        steps:
-            - 'checkout'
-            - 'install_php_extension_pcov'
-            - 'composer_install'
-            - 'test'
-    test_php_plus1:
-        executor: 'php_plus1'
-        working_directory: '~/repo'
-        steps:
-            - 'checkout'
-            - 'install_php_extension_pcov'
-            - 'composer_install'
-            - 'test'
-    test_php_plus2:
-        executor: 'php_plus2'
-        working_directory: '~/repo'
+    test:
+        parameters:
+            executor:
+                type: 'string'
+        executor: '<<parameters.executor>>'
         steps:
             - 'checkout'
             - 'install_php_extension_pcov'
@@ -236,7 +218,6 @@ jobs:
             - 'test'
     release_publish:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'release_publish'
 
@@ -256,20 +237,17 @@ workflows:
                     requires:
                         - 'build'
             -
-                test_php_min:
+                test:
                     filters: *wf_lint_and_test_job_filter
+                    name: 'test_<<matrix.executor>>'
                     requires:
                         - 'build'
-            -
-                test_php_plus1:
-                    filters: *wf_lint_and_test_job_filter
-                    requires:
-                        - 'build'
-            -
-                test_php_plus2:
-                    filters: *wf_lint_and_test_job_filter
-                    requires:
-                        - 'build'
+                    matrix:
+                        parameters:
+                            executor:
+                                - 'php_min'
+                                - 'php_plus1'
+                                - 'php_plus2'
             -
                 release_publish:
                     filters:

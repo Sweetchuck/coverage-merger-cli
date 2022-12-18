@@ -58,7 +58,7 @@ class MergeFilesTest extends Unit
         $this->tester->assertSame('', $commandTester->getDisplay(), 'stdOutput');
         $this->tester->assertSame('', $commandTester->getErrorOutput(), 'stdError');
 
-        $expectedFileName = 'merged-' . $this->tester->grabPhpVersionMajorMinor() . '.php';
+        $expectedFileName = 'merged-' . $this->tester->grabPhpVersionMajorMinor() . '-unit.php';
 
         $this->tester->assertSame(
             strtr(
