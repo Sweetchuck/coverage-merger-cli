@@ -22,7 +22,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'circleci/php:7.4'
+                image: 'cimg/php:7.4'
 
 commands:
     install_php_extension_pcov:
@@ -33,15 +33,13 @@ commands:
                     name: 'Install PCOV PHP extension - pecl install pcov'
                     command: |
                         sudo pecl install pcov
-                        php -v
-                        php -m
                         if php -m | grep pcov ; then
                             exit 0
                         fi
 
                         scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
                         echo 'extension=pcov' | sudo tee "${scanDir}/pcov.ini"
-                        php -m
+                        php -m | grep pcov
 
     composer_install:
         description: 'Install Composer dependencies with cache restore and save'
@@ -73,7 +71,9 @@ commands:
                 run:
                   name: 'Composer install – set phar.ini'
                   command: |-
-                      echo 'phar.readonly=Off' | sudo tee '/usr/local/etc/php/conf.d/docker-php-ext-phar.ini'
+                      scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
+                      echo 'phar.readonly=Off' | sudo tee "${scanDir}/docker-php-ext-phar.ini"
+                      php -i | grep 'phar.readonly => Off => Off'
 
     release_build:
         description: 'Release build'
@@ -87,7 +87,7 @@ commands:
                             tag="${CIRCLE_BRANCH}-dev+$(git log -1 --pretty='format:%ct-%h')"
                         fi
 
-                        robo -v release:build --tag="${tag}"
+                        robo -vv release:build --tag="${tag}"
                         ./artifacts/${APP_NAME}.phar --version
             -
                 persist_to_workspace:
@@ -181,21 +181,18 @@ commands:
 jobs:
     build:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'release_build'
     lint:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'composer_install'
             - 'lint'
     test_php_min:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'checkout'
             - 'install_php_extension_pcov'
@@ -203,7 +200,6 @@ jobs:
             - 'test'
     release_publish:
         executor: 'php_min'
-        working_directory: '~/repo'
         steps:
             - 'release_publish'
 
