@@ -53,7 +53,6 @@
         "sweetchuck/robo-git": "2.x-dev",
         "sweetchuck/robo-phpcs": "2.x-dev",
         "sweetchuck/robo-phpmd": "2.x-dev",
-        "sweetchuck/utils": "1.x-dev",
         "symfony/error-handler": "^5.3 || ^6.0",
         "symfony/filesystem": "^5.0 || ^6.0",
         "symfony/finder": "^5.3 || ^6.0",
@@ -71,7 +70,9 @@
         "psr-4": {
             "Sweetchuck\\CoverageMergerCli\\Tests\\Acceptance\\": "tests/acceptance/",
             "Sweetchuck\\CoverageMergerCli\\Tests\\Unit\\": "tests/unit/",
-            "Sweetchuck\\CoverageMergerCli\\Tests\\": "tests/_support/"
+            "Sweetchuck\\CoverageMergerCli\\Tests\\": "tests/_support/",
+            "Sweetchuck\\CoverageMergerCli\\Tests\\Fixtures\\Case01\\": "tests/_data/fixtures/case-01/src/",
+            "Sweetchuck\\CoverageMergerCli\\Tests\\Fixtures\\Case01\\Tests\\": "tests/_data/fixtures/case-01/tests/"
         }
     },
     "scripts": {},

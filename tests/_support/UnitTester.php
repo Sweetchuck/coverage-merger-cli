@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Sweetchuck\CoverageMergerCli\Tests;
 
+use Codeception\Actor;
 use Symfony\Component\Process\Process;
 
 /**
@@ -21,7 +22,7 @@ use Symfony\Component\Process\Process;
  *
  * @SuppressWarnings(PHPMD)
  */
-class UnitTester extends \Codeception\Actor
+class UnitTester extends Actor
 {
     use _generated\UnitTesterActions;
 
@@ -36,6 +37,9 @@ class UnitTester extends \Codeception\Actor
 
         $process = new Process($command, $dir);
         $process->run();
+        if ($process->getExitCode() !== 0) {
+            throw new \Exception($process->getOutput() . "\n\n" . $process->getErrorOutput());
+        }
     }
 
     public function grabPhpVersionMajorMinor(): string
