@@ -18,7 +18,6 @@ use Sweetchuck\Robo\Composer\ComposerTaskLoader;
 use Sweetchuck\Robo\Git\GitTaskLoader;
 use Sweetchuck\Robo\Phpcs\PhpcsTaskLoader;
 use Sweetchuck\Robo\PhpMessDetector\PhpmdTaskLoader;
-use Sweetchuck\Utils\Filter\ArrayFilterEnabled;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -252,31 +251,6 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
         return "{$this->envVarNamePrefix}_" . strtoupper($name);
     }
 
-    protected function getPhpExecutable($key): array
-    {
-        $executables = $this->getConfig()->get('php.executables');
-        $definition = array_replace_recursive(
-            [
-                'envVars' => [],
-                'binary' => 'php',
-                'args' => [],
-            ],
-            $executables[$key] ?? [],
-        );
-
-        $argFilter = function ($value) {
-            return !empty($value['enabled']);
-        };
-        $argComparer = function (array $a, array $b) {
-            return ($a['weight'] ?? 99) <=> ($b['weight'] ?? 99);
-        };
-        $definition['envVars'] = array_filter($definition['envVars']);
-        $definition['args'] = array_filter($definition['args'], $argFilter);
-        uasort($definition['args'], $argComparer);
-
-        return $definition;
-    }
-
     /**
      * @return $this
      */
@@ -330,7 +304,7 @@ class RoboFile extends Tasks implements LoggerAwareInterface, ConfigAwareInterfa
 
         $phpExecutables = array_filter(
             (array) $this->getConfig()->get('php.executables'),
-            new ArrayFilterEnabled(),
+            fn(array $php) => !empty($php['enabled']),
         );
 
         $cb = $this->collectionBuilder();
