@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03b1e928aee2ade965dd9cfd73e866a0",
+    "content-hash": "bb25b3675d1dd008e933c7c82a313af2",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -671,7 +671,6 @@
                 "sweetchuck/robo-composer": "2.x-dev",
                 "sweetchuck/robo-git": "2.x-dev",
                 "sweetchuck/robo-phpcs": "2.x-dev",
-                "sweetchuck/utils": "1.x-dev",
                 "symfony/error-handler": "^5.4 || ^6.0"
             },
             "default-branch": true,
@@ -4756,7 +4755,6 @@
                 "sweetchuck/robo-git": "2.x-dev",
                 "sweetchuck/robo-phpcs": "2.x-dev",
                 "sweetchuck/robo-phpmd": "2.x-dev",
-                "sweetchuck/utils": "1.x-dev",
                 "symfony/error-handler": "^5.0 || ^6.0"
             },
             "default-branch": true,
@@ -5206,6 +5204,7 @@
                 "sweetchuck/git-hooks": "2.x-dev",
                 "sweetchuck/robo-git": "2.x-dev",
                 "sweetchuck/robo-phpcs": "2.x-dev",
+                "sweetchuck/utils": "1.x-dev",
                 "symfony/error-handler": "4.0 || ^5.0 || ^6.0",
                 "symfony/finder": "^4.0 || ^5.0 || ^6.0",
                 "symfony/yaml": "^4.0 || ^5.0 || ^6.0"
@@ -5249,12 +5248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sweetchuck/utils.git",
-                "reference": "252c52475f1c639e93ac218c5abb2729f245a92e"
+                "reference": "5f384968cbf3a68e7063dea7963a86b405fc7666"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/252c52475f1c639e93ac218c5abb2729f245a92e",
-                "reference": "252c52475f1c639e93ac218c5abb2729f245a92e",
+                "url": "https://api.github.com/repos/Sweetchuck/utils/zipball/5f384968cbf3a68e7063dea7963a86b405fc7666",
+                "reference": "5f384968cbf3a68e7063dea7963a86b405fc7666",
                 "shasum": ""
             },
             "require": {
@@ -5308,7 +5307,7 @@
                 "issues": "https://github.com/Sweetchuck/utils/issues",
                 "source": "https://github.com/Sweetchuck/utils"
             },
-            "time": "2022-12-07T20:00:06+00:00"
+            "time": "2023-10-09T21:20:55+00:00"
         },
         {
             "name": "symfony/config",
@@ -6054,8 +6053,7 @@
         "sweetchuck/robo-composer": 20,
         "sweetchuck/robo-git": 20,
         "sweetchuck/robo-phpcs": 20,
-        "sweetchuck/robo-phpmd": 20,
-        "sweetchuck/utils": 20
+        "sweetchuck/robo-phpmd": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -6064,5 +6062,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

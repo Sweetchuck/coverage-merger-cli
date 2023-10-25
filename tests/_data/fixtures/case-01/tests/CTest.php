@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Sweetchuck\CoverageMergerCli\Test\Fixtures\Case01\Tests;
+namespace Sweetchuck\CoverageMergerCli\Tests\Fixtures\Case01\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Sweetchuck\CoverageMergerCli\Test\Fixtures\Case01\C;
+use Sweetchuck\CoverageMergerCli\Tests\Fixtures\Case01\C;
 
 /**
- * @covers \Sweetchuck\CoverageMergerCli\Test\Fixtures\Case01\C
+ * @covers \Sweetchuck\CoverageMergerCli\Tests\Fixtures\Case01\C
  */
 class CTest extends TestCase
 {
