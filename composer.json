@@ -55,7 +55,6 @@
         "sweetchuck/robo-git": "2.x-dev",
         "sweetchuck/robo-phpcs": "2.x-dev",
         "sweetchuck/robo-phpmd": "2.x-dev",
-        "sweetchuck/utils": "1.x-dev",
         "symfony/error-handler": "^5.3 || ^6.0",
         "symfony/finder": "^5.3 || ^6.0",
         "symfony/yaml": "^5.4 || ^6.0"
