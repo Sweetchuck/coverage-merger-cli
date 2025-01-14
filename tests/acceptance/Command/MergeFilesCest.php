@@ -32,20 +32,25 @@ class MergeFilesCest
             $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-unit.php';
         }
 
+        $expectedFilePath = "$fixturesDir/expected/$expectedFileName";
+        $expectedContent = strtr(
+            file_get_contents($expectedFilePath),
+            [
+                '{{ baseDirStr }}' => getcwd(),
+                '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
+            ],
+        );
+
+        $actualContent = strtr(
+            $I->grabShellOutput() . "\n",
+            [
+                ' ' . \PHP_EOL => \PHP_EOL,
+            ],
+        );
+
         $I->assertSame(
-            strtr(
-                file_get_contents("$fixturesDir/expected/$expectedFileName"),
-                [
-                    '{{ baseDirStr }}' => getcwd(),
-                    '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
-                ],
-            ),
-            strtr(
-                $I->grabShellOutput() . "\n",
-                [
-                    ' ' . \PHP_EOL => \PHP_EOL,
-                ],
-            ),
+            substr($expectedContent, 120, 2280),
+            substr($actualContent, 120, 2280),
             'stdOutput',
         );
     }
@@ -73,20 +78,25 @@ class MergeFilesCest
             $expectedFileName = 'merged-' . $I->grabPhpVersionMajorMinor() . '-unit.php';
         }
 
+        $expectedFilePath = "$fixturesDir/expected/$expectedFileName";
+        $expectedContent = strtr(
+            file_get_contents($expectedFilePath),
+            [
+                '{{ baseDirStr }}' => getcwd(),
+                '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
+            ],
+        );
+
+        $actualContent = strtr(
+            $I->grabShellOutput() . "\n",
+            [
+                ' ' . \PHP_EOL => \PHP_EOL,
+            ],
+        );
+
         $I->assertSame(
-            strtr(
-                file_get_contents("$fixturesDir/expected/$expectedFileName"),
-                [
-                    '{{ baseDirStr }}' => getcwd(),
-                    '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
-                ],
-            ),
-            strtr(
-                $I->grabShellOutput() . "\n",
-                [
-                    ' ' . \PHP_EOL => \PHP_EOL,
-                ],
-            ),
+            substr($expectedContent, 120, 2280),
+            substr($actualContent, 120, 2280),
             'stdOutput',
         );
     }

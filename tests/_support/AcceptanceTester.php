@@ -30,6 +30,7 @@ class AcceptanceTester extends \Codeception\Actor
         $phpunitExecutable = realpath('vendor/bin/phpunit');
         $command = [
             $phpunitExecutable,
+            '--do-not-cache-result',
             "--coverage-php=reports/" . preg_replace('@Test\.php$@', '.php', $testFile),
             "tests/$testFile",
         ];
