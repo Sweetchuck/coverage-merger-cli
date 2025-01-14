@@ -30,6 +30,7 @@ class UnitTester extends Actor
     {
         $phpunitExecutable = realpath('vendor/bin/phpunit');
         $command = [
+            \PHP_BINARY,
             $phpunitExecutable,
             "--coverage-php=reports/" . preg_replace('@Test\.php$@', '.php', $testFile),
             "tests/$testFile",
