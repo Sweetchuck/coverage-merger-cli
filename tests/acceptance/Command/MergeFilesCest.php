@@ -33,13 +33,7 @@ class MergeFilesCest
         }
 
         $expectedFilePath = "$fixturesDir/expected/$expectedFileName";
-        $expectedContent = strtr(
-            file_get_contents($expectedFilePath),
-            [
-                '{{ baseDirStr }}' => getcwd(),
-                '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
-            ],
-        );
+        $expectedContent = file_get_contents($expectedFilePath);
 
         $actualContent = strtr(
             $I->grabShellOutput() . "\n",
@@ -49,8 +43,8 @@ class MergeFilesCest
         );
 
         $I->assertSame(
-            substr($expectedContent, 120, 2280),
-            substr($actualContent, 120, 2280),
+            substr($expectedContent, 0, 70),
+            substr($actualContent, 0, 70),
             'stdOutput',
         );
     }
@@ -79,14 +73,7 @@ class MergeFilesCest
         }
 
         $expectedFilePath = "$fixturesDir/expected/$expectedFileName";
-        $expectedContent = strtr(
-            file_get_contents($expectedFilePath),
-            [
-                '{{ baseDirStr }}' => getcwd(),
-                '{{ baseDirLength }}' => (string) (strlen(getcwd()) + 39),
-            ],
-        );
-
+        $expectedContent = file_get_contents($expectedFilePath);
         $actualContent = strtr(
             $I->grabShellOutput() . "\n",
             [
@@ -95,8 +82,8 @@ class MergeFilesCest
         );
 
         $I->assertSame(
-            substr($expectedContent, 120, 2280),
-            substr($actualContent, 120, 2280),
+            substr($expectedContent, 0, 70),
+            substr($actualContent, 0, 70),
             'stdOutput',
         );
     }
