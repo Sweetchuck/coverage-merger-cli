@@ -1,8 +1,7 @@
-
 version: 2.1
 
 orbs:
-    codecov: 'codecov/codecov@3.0.0'
+    codecov: 'codecov/codecov@5'
 
 .env_common: &env_common
     SHELL: '/bin/bash'
@@ -23,7 +22,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'cimg/php:7.4'
+                image: 'cimg/php:8.4'
 
     php_plus1:
         resource_class: 'small'
@@ -33,47 +32,7 @@ executors:
         docker:
             -
                 name: 'main'
-                image: 'cimg/php:8.0'
-
-    php_plus2:
-        resource_class: 'small'
-        environment:
-            <<: *env_common
-            <<: *env_composer
-        docker:
-            -
-                name: 'main'
-                image: 'cimg/php:8.1'
-
-    php_plus3:
-        resource_class: 'small'
-        environment:
-            <<: *env_common
-            <<: *env_composer
-        docker:
-            -
-                name: 'main'
-                image: 'cimg/php:8.2'
-
-    php_plus4:
-        resource_class: 'small'
-        environment:
-            <<: *env_common
-            <<: *env_composer
-        docker:
-            -
-                name: 'main'
-                image: 'cimg/php:8.3'
-
-    php_plus5:
-        resource_class: 'small'
-        environment:
-            <<: *env_common
-            <<: *env_composer
-        docker:
-            -
-                name: 'main'
-                image: 'cimg/php:8.4'
+                image: 'cimg/php:8.5'
 
 commands:
     install_php_extension_pcov:
@@ -83,6 +42,10 @@ commands:
                 run:
                     name: 'Install PCOV PHP extension - pecl install pcov'
                     command: |
+                        if php -m | grep pcov ; then
+                            exit 0
+                        fi
+
                         sudo pecl install pcov
                         if php -m | grep pcov ; then
                             exit 0
@@ -115,15 +78,15 @@ commands:
                         - '~/.cache/composer/'
             -
                 run:
-                  name: 'Composer install – set PATH'
-                  command: |-
-                      echo "export PATH=\"${PWD}/$(composer config bin-dir):\${PATH}\"" >> "${BASH_ENV}"
+                    name: 'Composer install – set PATH'
+                    command: |-
+                        echo "export PATH=\"${PWD}/$(composer config bin-dir):\${PATH}\"" >> "${BASH_ENV}"
             -
                 run:
-                  name: 'Composer install – set phar.ini'
-                  command: |
-                      scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
-                      echo 'phar.readonly=Off' | sudo tee "${scanDir}/docker-php-ext-phar.ini"
+                    name: 'Composer install – set phar.ini'
+                    command: |
+                        scanDir="$(php -i | grep --color=never --only-matching --perl-regexp '(?<=^Scan this dir for additional \.ini files => ).+')"
+                        echo 'phar.readonly=Off' | sudo tee "${scanDir}/docker-php-ext-phar.ini"
 
     release_build:
         description: 'Release build'
@@ -152,7 +115,8 @@ commands:
             -
                 run:
                     name: 'Run linters'
-                    command: 'robo lint'
+                    command: |
+                        robo --ansi lint
 
     test:
         description: 'Run tests'
@@ -164,23 +128,33 @@ commands:
             -
                 run:
                     name: 'Run tests – unit'
-                    command: 'robo test unit'
+                    command: |
+                        robo --ansi test unit
             -
                 codecov/upload:
+                    token: 'CODECOV_TOKEN'
                     flags: 'unit'
-                    file: './tests/_log/machine/coverage/unit/coverage.xml'
-            -
-                run:
-                    name: 'Run tests – acceptance'
-                    command: 'robo test acceptance'
-            -
-                codecov/upload:
-                    flags: 'acceptance'
-                    file: './tests/_log/machine/coverage/acceptance/coverage.xml'
+                    disable_search: true
+                    files: './reports/machine/unit/coverage/clover.xml'
             -
                 store_test_results:
                     name: 'Run tests – Store test results'
-                    path: './tests/_log/machine/junit'
+                    path: './reports/machine/unit/result/junit.xml'
+            -
+                run:
+                    name: 'Run tests – acceptance'
+                    command: |
+                        robo --ansi test acceptance
+            -
+                codecov/upload:
+                    token: 'CODECOV_TOKEN'
+                    flags: 'acceptance'
+                    disable_search: true
+                    files: './reports/machine/acceptance/coverage/clover.xml'
+            -
+                store_test_results:
+                    name: 'Run tests – Store test results'
+                    path: './reports/machine/acceptance/result/junit.xml'
 
     release_publish:
         description: 'Publish release'
@@ -273,19 +247,15 @@ workflows:
                         - 'build'
             -
                 test:
-                    filters: *wf_lint_and_test_job_filter
                     name: 'test_<<matrix.executor>>'
+                    filters: *wf_lint_and_test_job_filter
                     requires:
                         - 'build'
                     matrix:
                         parameters:
                             executor:
                                 - 'php_min'
-                                - 'php_plus1'
-                                - 'php_plus2'
-                                - 'php_plus3'
-                                - 'php_plus4'
-                                - 'php_plus5'
+                                #- 'php_plus1'
             -
                 release_publish:
                     filters:
@@ -296,8 +266,4 @@ workflows:
                     requires:
                         - 'lint'
                         - 'test_php_min'
-                        - 'test_php_plus1'
-                        - 'test_php_plus2'
-                        - 'test_php_plus3'
-                        - 'test_php_plus4'
-                        - 'test_php_plus5'
+                        #- 'test_php_plus1'

@@ -1,12 +1,40 @@
-
+### Common.
+/.cache/
 /artifacts/
+/reports/
 
-/tests/_data/fixtures/case-01/reports/
-/tests/_log/
-/tests/_support/_generated/
 
+### Composer.
 /vendor/
+/sweetchuck-coverage-merger-cli-*.tar
+/sweetchuck-coverage-merger-cli-*.tar.bz2
+/sweetchuck-coverage-merger-cli-*.tar.gz
+/sweetchuck-coverage-merger-cli-*.zip
 
-/.git-hooks.local
-/coverage-merger.phar
+
+### Composer Suite.
+/.composer-suite/
+/composer.local.json
+/composer.local.lock
+
+
+### PHPUnit.
+/phpunit.xml
+/tests/fixtures/case-*/reports/
+
+
+### PHP Code Sniffer.
+/phpcs.xml
+
+
+### PHPStan.
+/tests/src/Phpstan.php
+/phpstan.neon
+
+
+### Robo.
 /robo.yml
+
+
+### sweetchuck/git-hooks.
+/.git-hooks.local

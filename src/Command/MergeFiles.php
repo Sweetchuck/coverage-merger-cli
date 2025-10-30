@@ -6,30 +6,40 @@ namespace Sweetchuck\CoverageMergerCli\Command;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Sweetchuck\CoverageMerger\CoverageMergerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class MergeFiles extends Command implements ContainerAwareInterface, LoggerAwareInterface
+#[AsCommand(
+    name: 'coverage:merge',
+    description: 'Merges two or more coverage PHP files into one.',
+)]
+class MergeFiles extends Command implements LoggerAwareInterface
 {
-    use ContainerAwareTrait;
     use LoggerAwareTrait;
 
     /**
      * {@inheritdoc}
      */
-    protected static $defaultName = 'merge:files';
+    public function __construct(
+        string $name,
+        protected CoverageMergerInterface $coverageMerger,
+        LoggerInterface $logger,
+    ) {
+        $this->setLogger($logger);
+        parent::__construct($name);
+    }
 
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Merges two or more coverage PHP files into one.')
@@ -50,21 +60,20 @@ class MergeFiles extends Command implements ContainerAwareInterface, LoggerAware
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $inputFiles = $this->createInputFilesIterator($input);
-        $merger = $this->createMerger();
         $exitCode = 0;
 
         try {
             $this->prepareOutputDirectory($input);
             $output = $this->createOutput($input);
-            $merger->merge($inputFiles);
-            $output->write($merger->getFileContent());
+            $this->coverageMerger->merge($inputFiles);
+            $output->write($this->coverageMerger->getFileContent());
             $this->tearDownOutput($output);
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            $exitCode = max($e->getCode(), 1);
+        } catch (\Throwable $exception) {
+            $this->logger->error($exception->getMessage());
+            $exitCode = max((int) $exception->getCode(), 1);
         }
 
         return $exitCode;
@@ -79,10 +88,7 @@ class MergeFiles extends Command implements ContainerAwareInterface, LoggerAware
             : new \SplFileObject('php://stdin');
     }
 
-    /**
-     * @return $this
-     */
-    protected function prepareOutputDirectory(InputInterface $input)
+    protected function prepareOutputDirectory(InputInterface $input): static
     {
         $fileName = $input->getOption('output-file');
         if ($fileName === null || $fileName === '') {
@@ -106,9 +112,12 @@ class MergeFiles extends Command implements ContainerAwareInterface, LoggerAware
     protected function createOutput(InputInterface $input): OutputInterface
     {
         $fileName = $input->getOption('output-file');
-        $fileHandler = $fileName === null || $fileName === '' ?
-            \STDOUT
+        $fileHandler = $fileName === null || $fileName === ''
+            ? \STDOUT
             : fopen($fileName, 'w+');
+        if ($fileHandler === false) {
+            throw new \RuntimeException("could not open file '$fileName' for writing", 1);
+        }
 
         return new StreamOutput(
             $fileHandler,
@@ -117,21 +126,12 @@ class MergeFiles extends Command implements ContainerAwareInterface, LoggerAware
         );
     }
 
-    /**
-     * @return $this
-     */
-    protected function tearDownOutput(OutputInterface $output)
+    protected function tearDownOutput(OutputInterface $output): static
     {
         if ($output instanceof StreamOutput) {
             fclose($output->getStream());
         }
 
         return $this;
-    }
-
-    protected function createMerger(): CoverageMergerInterface
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->container->get('coverage_merger');
     }
 }

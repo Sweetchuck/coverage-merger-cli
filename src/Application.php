@@ -16,10 +16,7 @@ use Symfony\Component\DependencyInjection\Reference as ServiceReference;
 class Application extends ApplicationBase
 {
 
-    /**
-     * @return $this
-     */
-    public function initialize()
+    public function initialize(): static
     {
         $container = new ContainerBuilder();
 
@@ -32,9 +29,13 @@ class Application extends ApplicationBase
 
         $container->register('coverage_merger', CoverageMerger::class);
 
-        $cmdMerge = new MergeFiles();
-        $cmdMerge->setContainer($container);
-        $cmdMerge->setLogger($container->get('logger'));
+        $cmdMerge = new MergeFiles(
+            'merge:files',
+            // @phpstan-ignore-next-line
+            $container->get('coverage_merger'),
+            // @phpstan-ignore-next-line
+            $container->get('logger'),
+        );
         $this->add($cmdMerge);
 
         return $this;
